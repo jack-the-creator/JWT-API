@@ -1,0 +1,47 @@
+version: "3"
+
+networks:
+  nginx-php-mariadb:
+
+services:
+  nginx-service:
+    image: nginx:stable-alpine
+    container_name: nginx-container
+    ports:
+      - "8080:80"
+    volumes:
+      - ./app:/var/www/project
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - php-service
+      - mariadb-service
+    networks:
+      - nginx-php-mariadb
+
+  php-service:
+    build:
+      context: .
+      dockerfile: ./php/Dockerfile
+    container_name: php-container
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./app:/var/www/project
+    networks:
+      - nginx-php-mariadb
+
+  mariadb-service:
+    image: mariadb
+    container_name: mariadb-container
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: password
+      MARIADB_DATABASE: coaches-voice
+      MARIADB_USER: user
+      MARIADB_PASSWORD: password
+    ports:
+      - "4306:3306"
+    volumes:
+      - ./mysql:/var/lib/mysql
+    networks:
+      - nginx-php-mariadb
