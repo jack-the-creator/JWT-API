@@ -1,8 +1,5 @@
 # JWT-API
 
-In case of Docker credential error see:
-https://stackoverflow.com/questions/65896681/exec-docker-credential-desktop-exe-executable-file-not-found-in-path
-
 ## Set-up
 
 Build and start docker containers:
